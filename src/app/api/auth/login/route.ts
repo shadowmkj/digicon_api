@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import { sendError, sendSuccess } from "@/lib/network";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 
 export async function POST(req: Request) {
   try {
@@ -25,13 +25,17 @@ export async function POST(req: Request) {
     if (!isPasswordValid) {
       return sendError("Invalid credentials", 401);
     }
-    const token = jwt.sign(
-      { id: user.id, email: user.email, time: new Date().toLocaleString() },
-      process.env.JWT_SECRET!,
-      {
-        expiresIn: "1h",
-      }
-    );
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+    const token = await new SignJWT({
+      id: user.id,
+      email: user.email,
+      time: new Date().toLocaleString(),
+      role: user.role,
+      name: user.name,
+    })
+      .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime("1h")
+      .sign(secret);
     return sendSuccess({ token, user }, "Login successful", 200);
   } catch (error) {
     console.error(error);

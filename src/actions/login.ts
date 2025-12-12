@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { encrypt } from "@/lib/auth";
 
 export async function loginAction(formData: LoginFormValues) {
+    console.log("Login action called with:", formData);
   const { email, password } = formData;
   const result = loginSchema.safeParse({ email, password });
   if (!result.success) {

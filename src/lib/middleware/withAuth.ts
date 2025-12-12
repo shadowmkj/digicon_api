@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 import { sendError } from "../network";
 import { UserAuth } from "../types";
 
@@ -10,11 +10,11 @@ export type AuthenticatedHandler = (
 ) => Promise<NextResponse> | NextResponse;
 
 // Load your secret from env
-const SECRET = process.env.JWT_SECRET!;
+const SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
 
 export function withAuth(handler: AuthenticatedHandler) {
   return async (req: NextRequest) => {
-    const authHeader = req.headers.get("authorization"); // fetch header :contentReference[oaicite:2]{index=2}
+    const authHeader = req.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { error: "Missing or invalid Authorization header" },
@@ -22,16 +22,13 @@ export function withAuth(handler: AuthenticatedHandler) {
       );
     }
 
-    const token = authHeader.slice(7); // strip “Bearer ” :contentReference[oaicite:3]{index=3}
-    let payload: UserAuth;
+    const token = authHeader.slice(7);
     try {
-      payload = jwt.verify(token, SECRET) as UserAuth; // verify & decode :contentReference[oaicite:4]{index=4}
+      const { payload } = await jwtVerify(token, SECRET);
+      return handler(req, payload as unknown as UserAuth);
     } catch (err) {
       console.log(err);
-      return sendError("Unauthenticated", 401); // handle error :contentReference[oaicite:5]{index=5}
+      return sendError("Unauthenticated", 401);
     }
-
-    // Delegate to your actual handler with the decoded payload
-    return handler(req, payload);
   };
 }
