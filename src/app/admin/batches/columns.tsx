@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Batch } from "@prisma/client";
+import { Batch } from "../../../../prisma/generated/client";
 
 export const columns: ColumnDef<Batch>[] = [
   {

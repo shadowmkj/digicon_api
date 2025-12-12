@@ -1,6 +1,6 @@
 "use client";
 import PDFDownloader from "@/app/admin/batches/[id]/pdf-downloader";
-import { Media } from "@prisma/client";
+import { Media } from "../../prisma/generated/client";
 import { Download } from "lucide-react";
 import { Button } from "./ui/button";
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const MediaOptions = ({ media, batchReference }: Props) => {
-  
+
   const downloadImage = () => {
     media?.forEach((media) => {
       const link = document.createElement("a");
@@ -29,7 +29,7 @@ const MediaOptions = ({ media, batchReference }: Props) => {
         <span className="text-sm">Download Images</span>
       </Button>
       <PDFDownloader media={media} batchReference={batchReference} />
-      
+
     </div>
   );
 };

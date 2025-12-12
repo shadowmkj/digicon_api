@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import jsPDF from "jspdf";
-import type { Media } from "@prisma/client";
+import type { Media } from "../../../../../prisma/generated/client";
 import { Button } from "@/components/ui/button";
 import { IconPdf } from "@tabler/icons-react";
 import { Share } from "lucide-react";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const PDFDownloader = ({ media, batchReference }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);  
+  const [isLoading, setIsLoading] = useState(false);
   const [isShareSupported, setIsShareSupported] = useState(false);
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const PDFDownloader = ({ media, batchReference }: Props) => {
    * Creates a PDF from a list of image URLs and triggers a download.
    */
   const createAndDownloadPdf = async () => {
-    setIsLoading(true);    
+    setIsLoading(true);
 
     try {
       const doc = await generatePdfDoc();
@@ -107,7 +107,7 @@ const PDFDownloader = ({ media, batchReference }: Props) => {
     }
   };
 
-  const handleShare = async () => {    
+  const handleShare = async () => {
     try {
       const doc = await generatePdfDoc();
       const pdfBlob = doc.output("blob");
@@ -121,13 +121,13 @@ const PDFDownloader = ({ media, batchReference }: Props) => {
         files: [pdfFile],
       });
     } catch (err: unknown) {
-      console.error("Error sharing PDF:", err);      
+      console.error("Error sharing PDF:", err);
       toast.error("Failed to share PDF. Check console for details.");
     }
   };
 
   return (
-    <>   
+    <>
       <Button
         onClick={createAndDownloadPdf}
         disabled={isLoading}

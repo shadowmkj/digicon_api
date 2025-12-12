@@ -74,7 +74,7 @@ import * as React from "react";
 
 import { deleteUser } from "@/actions/user";
 import { Input } from "@/components/ui/input";
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "../../../../prisma/generated/client";
 import { Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";

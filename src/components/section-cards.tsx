@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "../../prisma/generated/client";
 export type BatchWithMediaAndCreatedBy = Prisma.BatchGetPayload<{
   include: {
     media: true;
